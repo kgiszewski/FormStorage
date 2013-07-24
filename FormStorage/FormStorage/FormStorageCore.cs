@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using System.Net.Mail;
 
 using umbraco.BusinessLogic;
 using umbraco.DataLayer;
@@ -37,6 +38,22 @@ namespace FormStorage
             {
                 return Application.SqlHelper;
             }
-        }        
+        }
+
+        public void SendMail(string to, string from, string subject, string body, bool html)
+        {
+            MailMessage message = new System.Net.Mail.MailMessage
+            {
+                From = new System.Net.Mail.MailAddress(from),
+                Subject = subject,
+                IsBodyHtml = html
+            };
+
+            message.To.Add(to);
+
+            message.Body = body;
+            SmtpClient smtp = new System.Net.Mail.SmtpClient();
+            smtp.Send(message);
+        }
     }
 }

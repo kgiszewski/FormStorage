@@ -36,6 +36,13 @@
     <Reference Include="businesslogic">
       <HintPath>..\..\..\Acme\Acme\bin\businesslogic.dll</HintPath>
     </Reference>
+    <Reference Include="cms">
+      <HintPath>..\..\..\Acme\Acme\bin\cms.dll</HintPath>
+    </Reference>
+    <Reference Include="interfaces, Version=1.0.4927.24051, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\Acme\Acme\bin\interfaces.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Web.DynamicData" />
     <Reference Include="System.Web.Entity" />
@@ -57,9 +64,14 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DataEditor.cs" />
+    <Compile Include="DataType.cs" />
+    <Compile Include="DefaultData.cs" />
     <Compile Include="FormField.cs" />
     <Compile Include="FormSchema.cs" />
     <Compile Include="FormStorageCore.cs" />
+    <Compile Include="Options.cs" />
+    <Compile Include="PrevalueEditor.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
