@@ -16,21 +16,21 @@ namespace FormStorage
 
         protected void Page_Load(object sender, EventArgs e)
         {
-            Log.Add(LogTypes.Custom, 0, "Running FormStorage Installer...");
+            Log.Add(LogTypes.Custom, 0, "Running FormStorageForms Installer...");
 
             messageList = new HtmlGenericControl("ul");
             wrapper.Controls.Add(messageList);
 
-            AddTable("FormStorage", @"
+            AddTable("FormStorageForms", @"
                 CREATE TABLE [dbo].[FormStorageForms](
 	                [formID] [int] IDENTITY(1,1) NOT NULL,
 	                [alias] [nvarchar](50) NOT NULL,
-                 CONSTRAINT [PK_SimpleForms] PRIMARY KEY CLUSTERED 
+                 CONSTRAINT [PK_FormStorage] PRIMARY KEY CLUSTERED 
                 (
 	                [formID] ASC
                 )WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
                 ) ON [PRIMARY]
-            ");           
+            ");
 
             AddTable("FormStorageSubmissions", @"  
                 CREATE TABLE [dbo].[FormStorageSubmissions](
@@ -38,16 +38,16 @@ namespace FormStorage
 	                [formID] [int] NOT NULL,
 	                [IP] [nvarchar](50) NOT NULL,
 	                [datetime] [datetime] NOT NULL,
-                 CONSTRAINT [PK_SimpleFormSubmissions] PRIMARY KEY CLUSTERED 
+                 CONSTRAINT [PK_FormStorageSubmissions] PRIMARY KEY CLUSTERED 
                 (
 	                [submissionID] ASC
                 )WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
                 ) ON [PRIMARY]
 
-                ALTER TABLE [dbo].[FormStorageSubmissions]  WITH CHECK ADD  CONSTRAINT [FK_SimpleFormSubmissions_SimpleForms] FOREIGN KEY([formID])
+                ALTER TABLE [dbo].[FormStorageSubmissions]  WITH CHECK ADD  CONSTRAINT [FK_FormStorageubmissions_FormStorage] FOREIGN KEY([formID])
                 REFERENCES [dbo].[FormStorageForms] ([formID])
 
-                ALTER TABLE [dbo].[FormStorageSubmissions] CHECK CONSTRAINT [FK_SimpleFormSubmissions_SimpleForms]                
+                ALTER TABLE [dbo].[FormStorageSubmissions] CHECK CONSTRAINT [FK_FormStorageubmissions_FormStorage]                
             ");
 
             AddTable("FormStorageEntries", @" 

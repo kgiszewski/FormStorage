@@ -31,10 +31,14 @@ namespace FormStorage
 
         public FormSchema(string alias, bool createNewIfNotFound = true)
         {
-            SetFormByAlias(alias, createNewIfNotFound);
-            
-            //get the appSettings
-            formFields.AddRange(System.Web.Configuration.WebConfigurationManager.AppSettings["FormStorage:"+alias].Split(','));
+            try
+            {
+                SetFormByAlias(alias, createNewIfNotFound);
+
+                //get the appSettings
+                formFields.AddRange(System.Web.Configuration.WebConfigurationManager.AppSettings["FormStorage:" + alias].Split(','));
+            }
+            catch { }
         }        
 
         private void SetFormByAlias(string alias, bool createNewIfNotFound)
