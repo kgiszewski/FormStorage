@@ -23,12 +23,9 @@ namespace FormStorage
         private TextBox saveBox;
         private HtmlGenericControl wrapperDiv = new HtmlGenericControl("div");
         private HtmlGenericControl settingsTable = new HtmlGenericControl("table");
-        private HtmlGenericControl fieldsTable = new HtmlGenericControl("table");
 
         private JavaScriptSerializer jsonSerializer;
         private Options savedOptions, renderingOptions;
-
-        private FormSchema formSchema;
 
         public PrevalueEditor(umbraco.cms.businesslogic.datatype.BaseDataType DataType)
         {
@@ -93,20 +90,15 @@ namespace FormStorage
             else
             {
                 renderingOptions = savedOptions;
-            }
+            }            
 
-
-            BuildSettingsTable();
-
-            if(!String.IsNullOrEmpty(renderingOptions.alias)){
-                BuildFieldsTable();
-            }
+            BuildSettingsTable();            
         }
 
         private void BuildSettingsTable()
         {
             HtmlGenericControl tr, th, td;
-            TextBox name, alias;
+            TextBox alias;
 
             settingsTable.Attributes["class"] = "settingsTable";
             wrapperDiv.Controls.Add(settingsTable);
@@ -124,99 +116,8 @@ namespace FormStorage
             alias = new TextBox();
             alias.Attributes["class"] = "alias";
             td.Controls.Add(alias);
-            alias.Text = renderingOptions.alias;
-
-            //name
-            if (!String.IsNullOrEmpty(renderingOptions.alias))
-            {
-                formSchema = new FormSchema(renderingOptions.alias);
-
-                tr = new HtmlGenericControl("tr");
-                settingsTable.Controls.Add(tr);
-
-                th = new HtmlGenericControl("th");
-                tr.Controls.Add(th);
-                th.InnerHtml = "Name";
-
-                td = new HtmlGenericControl("td");
-                tr.Controls.Add(td);
-                name = new TextBox();
-                name.Attributes["class"] = "name";
-                td.Controls.Add(name);
-                name.Text = renderingOptions.name;
-            }
-        }
-
-        private void BuildFieldsTable()
-        {
-            HtmlGenericControl tr, th, thead, tbody;
-
-            fieldsTable.Attributes["class"] = "fieldsTable";
-            wrapperDiv.Controls.Add(fieldsTable);
-
-            thead = new HtmlGenericControl("thead");
-            fieldsTable.Controls.Add(thead);
-
-            tr = new HtmlGenericControl("tr");
-            thead.Controls.Add(tr);
-
-            th = new HtmlGenericControl("th");
-            tr.Controls.Add(th);
-            th.InnerHtml = "";
-
-            th = new HtmlGenericControl("th");
-            tr.Controls.Add(th);
-            th.InnerHtml = "Name";
-
-            th = new HtmlGenericControl("th");
-            tr.Controls.Add(th);
-            th.InnerHtml = "Alias";
-
-            th = new HtmlGenericControl("th");
-            tr.Controls.Add(th);
-            th.InnerHtml = "";
-
-            tbody = new HtmlGenericControl("tbody");
-            fieldsTable.Controls.Add(tbody);
-
-            //list each form field            
-            var sortedFields = formSchema.FormFields.OrderBy(o => o.sortOrder);
-
-            foreach (FormField thisField in sortedFields)
-            {
-                AddField(thisField, tbody);
-            }
-
-            //add in a blank
-            AddField(new FormField(), tbody);
-        }
-
-        private void AddField(FormField field, HtmlGenericControl tbody)
-        {
-            HtmlGenericControl tr, td;
-
-            tr = new HtmlGenericControl("tr");
-            tr.Attributes["fieldID"] = field.ID.ToString();
-            tbody.Controls.Add(tr); 
-
-            td = new HtmlGenericControl("td");
-            tr.Controls.Add(td);
-            td.Attributes["class"] = "fieldControls";
-            td.InnerHtml = "<img class='sortFieldsHandle' src='/App_Plugins/FormStorage/images/sort.png'/><img class='add' src='/App_Plugins/FormStorage/images/plus.png'/>";
-
-            td = new HtmlGenericControl("td");
-            tr.Controls.Add(td);
-            td.InnerHtml = "<input type='text' class='name' value='" + HttpUtility.UrlDecode(field.name) + "'/>";
-
-            td = new HtmlGenericControl("td");
-            tr.Controls.Add(td);
-            td.InnerHtml = "<input type='text' class='alias' value='" + HttpUtility.UrlDecode(field.alias) + "'/>";
-
-            td = new HtmlGenericControl("td");
-            tr.Controls.Add(td);
-            td.Attributes["class"] = "fieldControls2";
-            td.InnerHtml = "<img class='remove' src='/App_Plugins/FormStorage/images/minus.png'/>";
-        }
+            alias.Text = renderingOptions.alias;            
+        }                       
 
         public void Save()
         {

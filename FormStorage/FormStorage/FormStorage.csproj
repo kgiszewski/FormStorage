@@ -59,6 +59,9 @@
     <Reference Include="System.Configuration" />
     <Reference Include="System.Web.Services" />
     <Reference Include="System.EnterpriseServices" />
+    <Reference Include="umbraco">
+      <HintPath>Z:\Umbraco Dev\References\6.x\umbraco.dll</HintPath>
+    </Reference>
     <Reference Include="umbraco.DataLayer">
       <HintPath>..\..\..\Acme\Acme\bin\umbraco.DataLayer.dll</HintPath>
     </Reference>
@@ -67,12 +70,34 @@
     <Compile Include="DataEditor.cs" />
     <Compile Include="DataType.cs" />
     <Compile Include="DefaultData.cs" />
-    <Compile Include="FormField.cs" />
+    <Compile Include="download.aspx.cs">
+      <DependentUpon>download.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="download.aspx.designer.cs">
+      <DependentUpon>download.aspx</DependentUpon>
+    </Compile>
     <Compile Include="FormSchema.cs" />
     <Compile Include="FormStorageCore.cs" />
+    <Compile Include="FormStorageWebService.asmx.cs">
+      <DependentUpon>FormStorageWebService.asmx</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="installer.aspx.cs">
+      <DependentUpon>installer.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="installer.aspx.designer.cs">
+      <DependentUpon>installer.aspx</DependentUpon>
+    </Compile>
     <Compile Include="Options.cs" />
     <Compile Include="PrevalueEditor.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="download.aspx" />
+    <Content Include="FormStorageWebService.asmx" />
+    <Content Include="installer.aspx" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" />

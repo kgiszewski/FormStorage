@@ -11,8 +11,7 @@ namespace FormStorage
     public class FormSchema
     {
         private int DBformID = 0;
-        private List<FormField> formFields = new List<FormField>();
-        private string formName = "";
+        private List<string> formFields = new List<string>();
         private string alias = "";
 
         public int ID
@@ -20,37 +19,33 @@ namespace FormStorage
             get { return DBformID; }
         }
 
-        public string Name
-        {
-            get { return formName; }
-        }
-
         public string Alias
         {
             get { return alias; }
         }
 
-        public FormSchema(string alias, bool createNewIfNotFound = true)
-        {
-            SetFormByAlias(alias, createNewIfNotFound);
-            SetFormFieldsByFormId(DBformID);
-        }
-
-        public List<FormField> FormFields
+        public List<string> FormFields
         {
             get { return formFields; }
         }
 
+        public FormSchema(string alias, bool createNewIfNotFound = true)
+        {
+            SetFormByAlias(alias, createNewIfNotFound);
+            
+            //get the appSettings
+            formFields.AddRange(System.Web.Configuration.WebConfigurationManager.AppSettings["FormStorage:"+alias].Split(','));
+        }        
+
         private void SetFormByAlias(string alias, bool createNewIfNotFound)
         {
             this.alias = alias;
-            IRecordsReader reader = FormStorageCore.SqlHelper.ExecuteReader("SELECT formID, name FROM FormStorageForms WHERE alias = @alias", FormStorageCore.SqlHelper.CreateParameter("@alias", alias));
+            IRecordsReader reader = FormStorageCore.SqlHelper.ExecuteReader("SELECT formID FROM FormStorageForms WHERE alias = @alias", FormStorageCore.SqlHelper.CreateParameter("@alias", alias));
 
             if (reader.HasRecords)
             {
                 reader.Read();
                 DBformID = reader.Get<int>("formID");
-                formName = reader.Get<string>("name");
             }
 
             //creates new form in DB if not found
@@ -77,21 +72,6 @@ namespace FormStorage
 
                 }
             }
-        }
-
-        private void SetFormFieldsByFormId(int formID)
-        {
-            IRecordsReader reader = FormStorageCore.SqlHelper.ExecuteReader("SELECT * FROM FormStorageFields WHERE formID = @formID", FormStorageCore.SqlHelper.CreateParameter("@formID", formID));
-
-            if (!reader.HasRecords)
-            {
-                //throw new Exception("Fields not found for the given form ID.");
-            }
-
-            while (reader.Read())
-            {
-                formFields.Add(new FormField() { ID = reader.Get<int>("fieldID"), name = reader.Get<string>("name"), alias = reader.Get<string>("alias"), sortOrder = reader.Get<int>("sortOrder") });
-            }
         }        
         
         public int CreateSubmission(Dictionary<string, string> dataDictionary)
@@ -112,13 +92,13 @@ namespace FormStorage
             parameters = new IParameter[3];
             parameters[0] = FormStorageCore.SqlHelper.CreateParameter("@submissionID", submissionID);
 
-            foreach (FormField formField in formFields)
+            foreach (string formField in formFields)
             {
                 try
                 {
-                    parameters[1] = FormStorageCore.SqlHelper.CreateParameter("@fieldID", formField.ID);
-                    parameters[2] = FormStorageCore.SqlHelper.CreateParameter("@value", HttpUtility.HtmlEncode(dataDictionary[formField.alias]));
-                    int entryID = FormStorageCore.SqlHelper.ExecuteScalar<int>("INSERT INTO FormStorageEntries (submissionID, fieldID, value) VALUES (@submissionID, @fieldID, @value);SELECT SCOPE_IDENTITY() AS entryID;", parameters);
+                    parameters[1] = FormStorageCore.SqlHelper.CreateParameter("@fieldAlias", formField);
+                    parameters[2] = FormStorageCore.SqlHelper.CreateParameter("@value", HttpUtility.HtmlEncode(dataDictionary[formField]));
+                    int entryID = FormStorageCore.SqlHelper.ExecuteScalar<int>("INSERT INTO FormStorageEntries (submissionID, fieldAlias, value) VALUES (@submissionID, @fieldAlias, @value);SELECT SCOPE_IDENTITY() AS entryID;", parameters);
                 }
                 catch (Exception e2)
                 {

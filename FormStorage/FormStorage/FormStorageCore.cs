@@ -55,5 +55,19 @@ namespace FormStorage
             SmtpClient smtp = new System.Net.Mail.SmtpClient();
             smtp.Send(message);
         }
+
+        public static string GetDictionaryItem(string input)
+        {            
+            string translation=System.Web.Configuration.WebConfigurationManager.AppSettings["FormStorage:Translation:" + input];
+
+            if (String.IsNullOrEmpty(translation))
+            {
+                return input;
+            }
+            else
+            {
+                return translation;
+            }            
+        }
     }
 }
