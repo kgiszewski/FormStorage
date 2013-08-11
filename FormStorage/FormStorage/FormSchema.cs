@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using System.Text;
+using System.Security.Cryptography;
 
 using umbraco.BusinessLogic;
 using umbraco.DataLayer;
@@ -31,24 +33,22 @@ namespace FormStorage
 
         public FormSchema(string alias, bool createNewIfNotFound = true)
         {
-            try
-            {
+            //try
+            //{
                 SetFormByAlias(alias, createNewIfNotFound);
 
                 //get the appSettings
                 formFields.AddRange(System.Web.Configuration.WebConfigurationManager.AppSettings["FormStorage:" + alias].Split(','));
-            }
-            catch { }
+            //}
+            //catch { }
         }        
 
         private void SetFormByAlias(string alias, bool createNewIfNotFound)
         {
             this.alias = alias;
             IRecordsReader reader = FormStorageCore.SqlHelper.ExecuteReader("SELECT formID FROM FormStorageForms WHERE alias = @alias", FormStorageCore.SqlHelper.CreateParameter("@alias", alias));
-
-            if (reader.HasRecords)
-            {
-                reader.Read();
+            
+            while(reader.Read()){
                 DBformID = reader.Get<int>("formID");
             }
 
@@ -60,32 +60,65 @@ namespace FormStorage
                 parameters[0] = FormStorageCore.SqlHelper.CreateParameter("@alias", alias);
 
                 //could throw unique constraint
-                try
-                {
-                    DBformID = FormStorageCore.SqlHelper.ExecuteScalar<int>(@"
+                //try
+                //{
+                    FormStorageCore.SqlHelper.ExecuteNonQuery(@"
                         INSERT 
                         INTO FormStorageForms
                         (alias) 
                         VALUES 
                         (@alias);
-                        SELECT SCOPE_IDENTITY() AS formID;
                     ", parameters);
-                }
-                catch (Exception e)
-                {
 
+                    IParameter[] parameters2 = new IParameter[1];
+                    parameters2[0] = FormStorageCore.SqlHelper.CreateParameter("@alias", alias);
+
+                    DBformID = FormStorageCore.SqlHelper.ExecuteScalar<int>(@"
+                        SELECT formID FROM FormStorageForms WHERE alias=@alias;
+                    ", parameters2);
+                //}
+                //catch (Exception e)
+                //{
+
+                //}
+
+                if (DBformID == 0)
+                {
+                    throw new Exception("FormID is still zero");
                 }
             }
         }        
         
         public int CreateSubmission(Dictionary<string, string> dataDictionary)
         {
-            IParameter[] parameters = new IParameter[2];
+            string ipAddy = FormStorageCore.GetUserIP();
+
+            string sSourceData=ipAddy+DateTime.Now.Ticks.ToString();
+            byte[] tmpSource;
+            byte[] hash;
+            tmpSource = Encoding.UTF8.GetBytes(sSourceData);
+            hash = new MD5CryptoServiceProvider().ComputeHash(tmpSource);
+            string md5 = Convert.ToBase64String(hash);
+
+            IParameter[] parameters = new IParameter[3];
             parameters[0] = FormStorageCore.SqlHelper.CreateParameter("@DBformID", DBformID);
-            parameters[1] = FormStorageCore.SqlHelper.CreateParameter("@ipAddress", FormStorageCore.GetUserIP());
+            parameters[1] = FormStorageCore.SqlHelper.CreateParameter("@ipAddress", ipAddy);
+            parameters[2] = FormStorageCore.SqlHelper.CreateParameter("@hash", md5);
 
             //create submission
-            int submissionID = FormStorageCore.SqlHelper.ExecuteScalar<int>("INSERT INTO FormStorageSubmissions (formID, IP, datetime) VALUES (@DBformID, @ipAddress, GETDATE());SELECT SCOPE_IDENTITY() AS submissionID;", parameters);
+            FormStorageCore.SqlHelper.ExecuteNonQuery(@"
+                INSERT 
+                INTO FormStorageSubmissions (formID, IP, datetime, hash) 
+                VALUES 
+                (@DBformID, @ipAddress, GETDATE(), @hash);"
+            , parameters);
+
+            IParameter[] parameters2 = new IParameter[1];
+            parameters2[0] = FormStorageCore.SqlHelper.CreateParameter("@hash", md5);
+
+            int submissionID=FormStorageCore.SqlHelper.ExecuteScalar<int>(@"
+                SELECT submissionID FROM FormStorageSubmissions WHERE hash=@hash
+            ", parameters2);
             //HttpContext.Current.Response.Write("Submission ID=>" + submissionID + "<br/>");
 
             if (submissionID == 0)
@@ -98,16 +131,22 @@ namespace FormStorage
 
             foreach (string formField in formFields)
             {
-                try
-                {
+               //try
+                //{
                     parameters[1] = FormStorageCore.SqlHelper.CreateParameter("@fieldAlias", formField);
                     parameters[2] = FormStorageCore.SqlHelper.CreateParameter("@value", HttpUtility.HtmlEncode(dataDictionary[formField]));
-                    int entryID = FormStorageCore.SqlHelper.ExecuteScalar<int>("INSERT INTO FormStorageEntries (submissionID, fieldAlias, value) VALUES (@submissionID, @fieldAlias, @value);SELECT SCOPE_IDENTITY() AS entryID;", parameters);
-                }
-                catch (Exception e2)
-                {
+                    int entryID = FormStorageCore.SqlHelper.ExecuteScalar<int>(@"
+                        INSERT 
+                        INTO FormStorageEntries 
+                        (submissionID, fieldAlias, value) 
+                        VALUES 
+                        (@submissionID, @fieldAlias, @value);
+                    ", parameters);
+                //}
+                //catch (Exception e2)
+                //{
                     //HttpContext.Current.Response.Write(e2.Message);
-                }
+                //}
             }
 
             return submissionID;
