@@ -48,8 +48,11 @@ namespace FormStorage
             catch (Exception e)
             {
                 returnValue.Add("status", status.ERROR.ToString());
-                returnValue.Add("message", "An error has occurred. " + e.Message);
+                returnValue.Add("message", "An error has occurred while removing Entries. " + e.Message);
             }
+
+            IParameter[] parameters2 = new IParameter[1];
+            parameters2[0] = FormStorageCore.SqlHelper.CreateParameter("@submissionID", submissionID);
 
             try
             {
@@ -57,15 +60,18 @@ namespace FormStorage
                     DELETE
                     FROM FormStorageSubmissions
                     WHERE submissionID=@submissionID
-                ", parameters);
+                ", parameters2);
             }
             catch (Exception e)
             {
                 returnValue.Add("status", status.ERROR.ToString());
-                returnValue.Add("message", "An error has occurred. " + e.Message);
+                returnValue.Add("message", "An error has occurred while removing Submissions. " + e.Message);
             }
 
-            returnValue.Add("status", status.SUCCESS.ToString());
+            if (returnValue.Count == 0)
+            {
+                returnValue.Add("status", status.SUCCESS.ToString());
+            }
 
             return returnValue;
         }
