@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Net.Mail;
+using System.Text.RegularExpressions;
 
 using umbraco.BusinessLogic;
 using umbraco.DataLayer;
@@ -40,7 +41,7 @@ namespace FormStorage
             }
         }
 
-        public void SendMail(string to, string from, string subject, string body, bool html)
+        public static void SendMail(string to, string from, string subject, string body, bool html)
         {
             MailMessage message = new System.Net.Mail.MailMessage
             {
@@ -68,6 +69,13 @@ namespace FormStorage
             {
                 return translation;
             }            
+        }
+
+        public static bool CheckEmail(string email)
+        {
+            Regex regex = new Regex(@"^([\w\.\-]+)@([\w\-]+)((\.(\w){2,3})+)$");
+            Match match = regex.Match(email);
+            return match.Success;
         }
     }
 }
