@@ -131,9 +131,9 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="DataEditor.cs" />
-    <Compile Include="DataType.cs" />
-    <Compile Include="DefaultData.cs" />
+    <Compile Include="DataType\DataEditor.cs" />
+    <Compile Include="DataType\DataType.cs" />
+    <Compile Include="DataType\DefaultData.cs" />
     <Compile Include="download.aspx.cs">
       <DependentUpon>download.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -154,8 +154,8 @@
     <Compile Include="installer.ascx.designer.cs">
       <DependentUpon>installer.ascx</DependentUpon>
     </Compile>
-    <Compile Include="Options.cs" />
-    <Compile Include="PrevalueEditor.cs" />
+    <Compile Include="DataType\Options.cs" />
+    <Compile Include="DataType\PrevalueEditor.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
