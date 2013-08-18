@@ -177,7 +177,7 @@
       <HintPath>..\..\..\WidgetBuilder\WidgetBuilder\packages\UmbracoCms.Core.6.1.3\lib\Umbraco.Core.dll</HintPath>
     </Reference>
     <Reference Include="umbraco.DataLayer">
-      <HintPath>..\..\..\WidgetBuilder\WidgetBuilder\packages\UmbracoCms.Core.6.1.3\lib\umbraco.DataLayer.dll</HintPath>
+      <HintPath>..\packages\UmbracoCms.Core.6.1.3\lib\umbraco.DataLayer.dll</HintPath>
     </Reference>
     <Reference Include="umbraco.editorControls">
       <HintPath>..\..\..\WidgetBuilder\WidgetBuilder\packages\UmbracoCms.Core.6.1.3\lib\umbraco.editorControls.dll</HintPath>
