@@ -1,0 +1,98 @@
+.FormStorageWrapperDiv
+{
+    width: 1000px;
+}
+
+.FormStorageWrapperDiv .textContainer {
+    overflow: hidden;
+    height: 40px;
+    min-height: 40px;
+}
+
+.FormStorageWrapperDiv #settings,.FormStorageWrapperDiv  #submissions, .FormStorageWrapperDiv .resultsDiv{
+    border: 1px solid #ccc;
+    padding: 10px;
+    margin-bottom: 10px;
+}
+
+.FormStorageWrapperDiv #submissions{
+    
+}
+
+.FormStorageWrapperDiv label
+{
+    margin-right: 5px;
+}
+
+.FormStorageWrapperDiv .resultsUI{
+    border: 1px solid #ccc;
+    background-color: #eee;
+    padding: 10px;
+    margin-bottom: 10px;
+}
+
+.FormStorageWrapperDiv .resultsUI input[type=text]{
+    margin-right: 5px;
+}
+
+.FormStorageWrapperDiv .resultsUI .maxResults{
+    width: 30px;
+    text-align: center;
+}
+
+.FormStorageWrapperDiv .resultsUI .keywords{
+    width: 300px;
+}
+
+.FormStorageWrapperDiv tr {
+    vertical-align: top;
+}
+
+.FormStorageWrapperDiv th,td{
+    font-size: 12px;
+    font-weight: bold;
+    text-align: left;
+}
+
+.FormStorageWrapperDiv .resultsDiv{
+    max-height: 500px;
+    overflow: auto;
+}
+
+.FormStorageWrapperDiv .resultsDiv table{
+    width: 100%;
+}
+
+.FormStorageWrapperDiv .resultsDiv th{
+    text-align: left;
+}
+
+.FormStorageWrapperDiv .resultsDiv td{
+    font-weight: normal;
+    border-right: 1px solid #e6e6e6;
+    border-bottom: 1px solid #e6e6e6;
+    font-size: 10px;
+}
+
+.FormStorageWrapperDiv .resultsDiv td:last-child{
+    text-align: center;
+}
+
+.FormStorageWrapperDiv .resultsDiv td:first-child{
+    text-align: left;
+}
+
+.FormStorageWrapperDiv .rowHighlight{
+    background-color: #e6e6e6;
+}
+
+.FormStorageWrapperDiv .download,.FormStorageWrapperDiv .search
+{
+    float: right;
+}
+
+.FormStorageWrapperDiv h2
+{
+    margin-top:0;
+    padding-top: 0;
+}
