@@ -7,10 +7,8 @@ using umbraco.BusinessLogic;
 
 namespace FormStorage
 {
-
     public class DefaultData : umbraco.cms.businesslogic.datatype.DefaultData
     {
-
         public static string defaultXML = "<formStorage/>";
 
         public DefaultData(umbraco.cms.businesslogic.datatype.BaseDataType DataType) : base(DataType) { }

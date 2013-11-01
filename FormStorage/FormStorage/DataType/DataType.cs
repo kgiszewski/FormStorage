@@ -7,7 +7,7 @@ using umbraco.cms.businesslogic.datatype;
 namespace FormStorage
 {
 
-    public class InlineImagePicker : umbraco.cms.businesslogic.datatype.BaseDataType, umbraco.interfaces.IDataType
+    public class DataType : umbraco.cms.businesslogic.datatype.BaseDataType, umbraco.interfaces.IDataType
     {
         private umbraco.interfaces.IDataEditor _Editor;
         private umbraco.interfaces.IData _baseData;
